@@ -10,6 +10,10 @@ import numpy as np
 import pandas as pd
 from PIL import Image
 import joblib
+import warnings
+from PIL import Image
+# 忽略 DecompressionBombWarning
+warnings.filterwarnings("ignore", category=Image.DecompressionBombWarning)
 
 # 加载模型
 model_path = "stacking_regressor_model.pkl"
