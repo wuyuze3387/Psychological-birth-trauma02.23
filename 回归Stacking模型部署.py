@@ -11,9 +11,11 @@ import pandas as pd
 from PIL import Image
 import joblib
 import warnings
-from PIL import Image
+
 # 忽略 DecompressionBombWarning
 warnings.filterwarnings("ignore", category=Image.DecompressionBombWarning)
+# 忽略 DataConversionWarning
+warnings.filterwarnings("ignore", category=DataConversionWarning)
 
 # 加载模型
 model_path = "stacking_regressor_model.pkl"
@@ -96,7 +98,7 @@ st.write("基学习器（RandomForest、XGB、LGBM 等）的特征贡献分析�
 first_layer_img = "summary_plot.png"
 try:
     img1 = Image.open(first_layer_img)
-    st.image(img1, caption="第一层基学习器的 SHAP 贡献分析", use_column_width=True)
+    st.image(img1, caption="第一层基学习器的 SHAP 贡献分析", use_container_width=True)
 except FileNotFoundError:
     st.warning("未找到第一层基学习器的 SHAP 图像文件。")
 
@@ -106,7 +108,7 @@ st.write("元学习器（Linear Regression）的输入特征贡献分析。")
 meta_layer_img = "SHAP Contribution Analysis for the Meta-Learner in the Second Layer of Stacking Regressor.png"
 try:
     img2 = Image.open(meta_layer_img)
-    st.image(img2, caption="第二层元学习器的 SHAP 贡献分析", use_column_width=True)
+    st.image(img2, caption="第二层元学习器的 SHAP 贡献分析", use_container_width=True)
 except FileNotFoundError:
     st.warning("未找到第二层元学习器的 SHAP 图像文件。")
 
@@ -116,7 +118,7 @@ st.write("整个 Stacking 模型的特征贡献分析。")
 overall_img = "Based on the overall feature contribution analysis of SHAP to the stacking model.png"
 try:
     img3 = Image.open(overall_img)
-    st.image(img3, caption="整体 Stacking 模型的 SHAP 贡献分析", use_column_width=True)
+    st.image(img3, caption="整体 Stacking 模型的 SHAP 贡献分析", use_container_width=True)
 except FileNotFoundError:
     st.warning("未找到整体 Stacking 模型的 SHAP 图像文件。")
 
