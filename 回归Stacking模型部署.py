@@ -11,6 +11,7 @@ import pandas as pd
 from PIL import Image
 import joblib
 import warnings
+from sklearn.exceptions import DataConversionWarning  # 确保正确导入 DataConversionWarning
 
 # 忽略 DecompressionBombWarning
 warnings.filterwarnings("ignore", category=Image.DecompressionBombWarning)
