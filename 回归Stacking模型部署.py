@@ -10,13 +10,6 @@ import numpy as np
 import pandas as pd
 from PIL import Image
 import joblib
-import warnings
-from sklearn.exceptions import DataConversionWarning  # 确保正确导入 DataConversionWarning
-
-# 忽略 DecompressionBombWarning
-warnings.filterwarnings("ignore", category=Image.DecompressionBombWarning)
-# 忽略 DataConversionWarning
-warnings.filterwarnings("ignore", category=DataConversionWarning)
 
 # 加载模型
 model_path = "stacking_regressor_model.pkl"
@@ -39,7 +32,7 @@ Resilience = st.sidebar.number_input("Resilience (范围: 6-36)", min_value=6, m
 Depression = st.sidebar.number_input("Depression (范围: 0-3)", min_value=0, max_value=3, value=3)
 Anxiety = st.sidebar.number_input("Anxiety (范围: 0-3)", min_value=0, max_value=3, value=3)
 Family_support = st.sidebar.number_input("Family support (范围: 0-10)", min_value=0, max_value=10, value=5)
-Age = st.sidebar.selectbox("Age", options=["less than or equal to 35 years old", "greater than 35 years old"])
+Age = st.sidebar.selectboxnumber_input("Anxiety (范围: 21-63)", min_value=21, max_value=63, value=21)
 Occupation = st.sidebar.selectbox("Occupation", options=["Full-time job", "Part-time job"])
 Method_of_delivery = st.sidebar.selectbox("Method of delivery", options=["Vaginal delivery", "Cesarean section"])
 Marital_status = st.sidebar.selectbox("Marital status", options=["Married", "Unmarried"])
@@ -65,18 +58,17 @@ if predict_button:
         input_array = np.array([
             Resilience, Depression, Anxiety, Family_support, Intrapartum_pain, Postpartum_pain,
             # 对于分类特征，需要将其转换为数值（例如通过编码）
-            0 if Age == "less than or equal to 35 years old" else 1,
-            0 if Occupation == "Full-time job" else 1,
-            0 if Method_of_delivery == "Vaginal delivery" else 1,
-            0 if Marital_status == "Married" else 1,
-            0 if Educational_degree == "Associate degree or below" else 1,
-            0 if Average_monthly_household_income == "Average monthly household income less than or equal to 5000 yuan" else 1,
-            0 if Medical_insurance == "No" else 1,
-            0 if Mode_of_conception == "Natural conception" else 1,
-            0 if Pregnancy_complications == "Yes" else 1,
-            0 if Breastfeeding == "Yes" else 1,
-            0 if Rooming_in == "Yes" else 1,
-            0 if Planned_pregnancy == "Yes" else 1
+            1 if Occupation == "Full-time job" else 0,
+            1 if Method_of_delivery == "Vaginal delivery" else 0,
+            1 if Marital_status == "Married" else 0,
+            1 if Educational_degree == "Associate degree or below" else 0,
+            1 if Average_monthly_household_income == "Average monthly household income less than or equal to 5000 yuan" else 0,
+            1 if Medical_insurance == "No" else 0,
+            1 if Mode_of_conception == "Natural conception" else 0,
+            1 if Pregnancy_complications == "Yes" else 0,
+            1 if Breastfeeding == "Yes" else 0,
+            1 if Rooming_in == "Yes" else 0,
+            1 if Planned_pregnancy == "Yes" else 0
         ]).reshape(1, -1)
 
         # 模型预测
@@ -99,7 +91,7 @@ st.write("基学习器（RandomForest、XGB、LGBM 等）的特征贡献分析�
 first_layer_img = "summary_plot.png"
 try:
     img1 = Image.open(first_layer_img)
-    st.image(img1, caption="第一层基学习器的 SHAP 贡献分析", use_container_width=True)
+    st.image(img1, caption="第一层基学习器的 SHAP 贡献分析", use_column_width=True)
 except FileNotFoundError:
     st.warning("未找到第一层基学习器的 SHAP 图像文件。")
 
@@ -109,7 +101,7 @@ st.write("元学习器（Linear Regression）的输入特征贡献分析。")
 meta_layer_img = "SHAP Contribution Analysis for the Meta-Learner in the Second Layer of Stacking Regressor.png"
 try:
     img2 = Image.open(meta_layer_img)
-    st.image(img2, caption="第二层元学习器的 SHAP 贡献分析", use_container_width=True)
+    st.image(img2, caption="第二层元学习器的 SHAP 贡献分析", use_column_width=True)
 except FileNotFoundError:
     st.warning("未找到第二层元学习器的 SHAP 图像文件。")
 
@@ -119,7 +111,7 @@ st.write("整个 Stacking 模型的特征贡献分析。")
 overall_img = "Based on the overall feature contribution analysis of SHAP to the stacking model.png"
 try:
     img3 = Image.open(overall_img)
-    st.image(img3, caption="整体 Stacking 模型的 SHAP 贡献分析", use_container_width=True)
+    st.image(img3, caption="整体 Stacking 模型的 SHAP 贡献分析", use_column_width=True)
 except FileNotFoundError:
     st.warning("未找到整体 Stacking 模型的 SHAP 图像文件。")
 
